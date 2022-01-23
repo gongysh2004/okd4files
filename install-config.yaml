@@ -1,0 +1,63 @@
+apiVersion: v1
+baseDomain: okd.io
+metadata:
+  name: lab
+
+compute:
+- hyperthreading: Enabled
+  name: worker
+  replicas: 0
+
+controlPlane:
+  hyperthreading: Enabled
+  name: master
+  replicas: 3
+
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/16 
+    hostPrefix: 24 
+  networkType: OpenShiftSDN
+  serviceNetwork: 
+  - 172.30.0.0/16
+
+platform:
+  none: {}
+
+fips: false
+
+
+sshKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDppTyeFgzsIJYBt3XZ5bxpYidyn2NuP1o6iZfmpzy0cE5TybmDiqX7b5yhQUPBw8exo1wlORKasMW2+92eMACqu/5k63j2jnsPxqdhwl4vICPS5PWtDA6wD5DciDlZyI1OpVc7xK5pXTdPsRO0qEfrCstxbeM4Slf+Zy8TRfpvTpghRkSfhyj52dZXT8i0jhA9Kybl7kLaiPbVdGqxC/vkqRCmlWUNwILgW+NaOiIY8MVl6r60eUmBgk2SCfZ2xtmKv9BJ2chVpUGVd7kBJ01Zz06kUQKSepncAtAhYoKb6CiVOOwaS0nb8p6KcGvLDD6SFnuganZrhgAnjvRsBbQ4yql42U+ESCljtyUpzFUTi9Wtl3CvVdMu5ksp6OlO5Y2zjLCgRgo2j1oL4TSQetZhluPoJs6Wbg8pVJIcLYGgTQeHB0DkOLJ4CR0APvof5EU3fDZhXtLR70p+5qxWG1TzuDcWvPf0EIlQuRLYGAu39Ke9exDMqpo/k87Fk7ZZv+U= centos@okd4-services.okd.io'  
+
+additionalTrustBundle: |
+  -----BEGIN CERTIFICATE-----
+  MIIDxjCCAq6gAwIBAgIUEHDJLOf2E8wLLK4UkZyNnsnZ/LgwDQYJKoZIhvcNAQEL
+  BQAwfDELMAkGA1UEBhMCWFgxDDAKBgNVBAgMA04vQTEMMAoGA1UEBwwDTi9BMSAw
+  HgYDVQQKDBdTZWxmLXNpZ25lZCBjZXJ0aWZpY2F0ZTEvMC0GA1UEAwwmMTcyLjE4
+  LjExNC44MTogU2VsZi1zaWduZWQgY2VydGlmaWNhdGUwHhcNMjIwMTIyMTMzNzEx
+  WhcNMjQwMTIyMTMzNzExWjB8MQswCQYDVQQGEwJYWDEMMAoGA1UECAwDTi9BMQww
+  CgYDVQQHDANOL0ExIDAeBgNVBAoMF1NlbGYtc2lnbmVkIGNlcnRpZmljYXRlMS8w
+  LQYDVQQDDCYxNzIuMTguMTE0LjgxOiBTZWxmLXNpZ25lZCBjZXJ0aWZpY2F0ZTCC
+  ASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMM7pp6B2yFHN4XJXsk+mhvc
+  1cbz4AVmnywtvn8V9YUISwN9DyuuVT5j/zrHk8Sohs6Xgxtd/Uz+XNVeOfJXqviG
+  rGP0NymTjWlXGC2hzba+5sQJegTVSemNqJojUr9YxWWuK8dxUnQexkG2AK/biYuu
+  XM0l0GtNFGXz5FzleSVP6pcTCsKcXbQ/Bg5HRrXPW5qg5cOVHsOkc86L0SIzLAIs
+  +ogQxqm78p+ouhWv4mIVgGOzqYrcgPh08VbonOv5mSdI4Hy8TXwgm9Wmsrrzyi57
+  oLuNQRKPVef9y98PR+YDSkcsuAbjZ2NGu43LBqpCeTeuZkyAyoeStleso6CS3q0C
+  AwEAAaNAMD4wKwYDVR0RBCQwIocErBJyUYcEwKgBZIIUb2tkNC1zZXJ2aWNlcy5v
+  a2QuaW8wDwYDVR0TAQH/BAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEArkcxEMLC
+  Pti3IgfMBY5+0Am7mQtZDTpuX17+Vjn4tDTPTr11515UNE9aODLhMnIvJ9QeW6tx
+  B/5S3aiNDAZX6uKvbrCyXLMAMNeFErU154QbP0YMm5QGuwo8PXUFFCOg7irFIFTd
+  rjsatMl4/pVTLCxX22Bfc8I/21TqsSI2Dm/sRwhymEr6qgHBWpJrgH6X8bJ4XTKW
+  rLwf685GO2ILI5rdM3yWVL9tBUSLaUttlcWz2JVWVtRRKnUSkSbI9xxU2bZQ2gTH
+  046EEDquWAd3L/ft3Ixnjw4YlRk7AjIQKm27znEZSYInZZp2qRjdC0k4yPIv/ZoO
+  uAjdCAIj89sgRA==
+  -----END CERTIFICATE-----
+
+imageContentSources:
+- mirrors:
+  - okd4-services.okd.io:5000/openshift/okd
+  source: quay.io/openshift/okd
+- mirrors:
+  - okd4-services.okd.io:5000/openshift/okd
+  source: quay.io/openshift/okd-content

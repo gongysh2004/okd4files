@@ -1,0 +1,47 @@
+sudo bash
+mkdir -p /opt/registry/{auth,certs,data}
+cd /opt/registry/certs
+echo "[req]
+default_bits  = 2048
+distinguished_name = req_distinguished_name
+req_extensions = req_ext
+x509_extensions = v3_req
+prompt = no
+
+[req_distinguished_name]
+countryName = XX
+stateOrProvinceName = N/A
+localityName = N/A
+organizationName = Self-signed certificate
+commonName = okd4-services.okd.io
+
+[req_ext]
+subjectAltName = @alt_names
+
+[v3_req]
+subjectAltName = @alt_names
+basicConstraints = critical, CA:TRUE
+
+[alt_names]
+IP.1 = 172.18.114.81
+IP.2 = 192.168.1.100
+DNS.1 = okd4-services.okd.io
+" > san.cnf
+openssl req -x509 -nodes -days 730 -newkey rsa:2048 -keyout domain.key -out domain.crt -config san.cnf
+
+cp domain.crt /etc/pki/ca-trust/source/anchors/
+update-ca-trust extract
+
+docker run -d \
+  --restart=always \
+  --name registry \
+  -v "$(pwd)"/certs:/certs \
+  -v /mnt/registry:/var/lib/registry \
+  -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \
+  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
+  -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \
+  -p 443:443 \
+  registry:2
+
+mkdir -p  /etc/docker/certs.d/okd4-services.okd.io
+cp certs/domain.crt  /etc/docker/certs.d/okd4-services.okd.io/ca.crt
