@@ -29,14 +29,18 @@ DNS.1 = okd4-services.okd.io
 " > san.cnf
 openssl req -x509 -nodes -days 730 -newkey rsa:2048 -keyout domain.key -out domain.crt -config san.cnf
 
+#on centos
 cp domain.crt /etc/pki/ca-trust/source/anchors/
 update-ca-trust extract
+# on ubuntu:
+cp domain.crt  /usr/local/share/ca-certificates/
+update-ca-certificates
 
 docker run -d \
   --restart=always \
   --name registry \
-  -v "$(pwd)"/certs:/certs \
-  -v /mnt/registry:/var/lib/registry \
+  -v /opt/registry/certs:/certs \
+  -v /opt/registry/data:/var/lib/registry \
   -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \
   -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
   -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \
